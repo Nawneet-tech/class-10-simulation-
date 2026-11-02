@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#080d17">
+    <meta name="description" content="An interactive Class 10 simulation of reflection and refraction by mirrors and lenses.">
+    <title>Light — Reflection and Refraction</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="eyebrow">CLASS 10 PHYSICS <span aria-hidden="true">/</span> CHAPTER 10</div>
+          <h1>Light — Reflection &amp; Refraction</h1>
+          <p>Interactive working simulation — image formation by mirrors and lenses</p>
+        </div>
+        <div class="system-state" id="systemState" data-active="false" role="status" aria-live="polite">
+          <span class="state-dot" aria-hidden="true"></span>
+          <span id="stateLabel">SIMULATION OFF</span>
+        </div>
+      </header>
+
+      <section class="workspace" aria-label="Light simulation workspace">
+        <section class="visual-panel panel" aria-label="Optical ray diagram">
+          <div class="panel-heading visual-heading">
+            <div>
+              <span class="section-kicker">LIVE OPTICAL BENCH</span>
+              <h2>Ray diagram</h2>
+            </div>
+            <div class="diagram-legend" aria-label="Diagram legend">
+              <span><i class="legend-swatch object-swatch"></i>Object</span>
+              <span><i class="legend-swatch image-swatch"></i>Image</span>
+              <span><i class="legend-swatch ray-swatch"></i>Light ray</span>
+            </div>
+          </div>
+          <div class="canvas-wrap">
+            <canvas id="rayCanvas" aria-label="Principal axis and optical ray diagram">
+              Your browser does not support the HTML canvas.
+            </canvas>
+            <div class="canvas-corner-label">OPTICAL AXIS <span>·</span> NOT TO SCALE</div>
+          </div>
+          <div class="diagram-caption">
+            <span class="caption-icon" aria-hidden="true">i</span>
+            <p id="diagramMessage" role="status" aria-live="polite">Simulation OFF — No Rays</p>
+          </div>
+        </section>
+
+        <aside class="dashboard" aria-label="Simulation controls and results">
+          <section class="panel controls-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="section-kicker">EXPERIMENT SETUP</span>
+                <h2>System controls</h2>
+              </div>
+              <span class="panel-index">01</span>
+            </div>
+
+            <label class="field-label" for="systemSelect">Optical system</label>
+            <div class="select-wrap">
+              <select id="systemSelect">
+                <option value="concave-mirror">Concave Mirror</option>
+                <option value="convex-mirror">Convex Mirror</option>
+                <option value="concave-lens">Concave Lens</option>
+                <option value="convex-lens">Convex Lens</option>
+              </select>
+              <span class="select-chevron" aria-hidden="true"></span>
+            </div>
+
+            <div class="range-control">
+              <div class="range-heading">
+                <label for="objectDistance">Object distance <span class="variable">(u)</span></label>
+                <output id="objectDistanceValue" for="objectDistance">−60 cm</output>
+              </div>
+              <input id="objectDistance" type="range" min="20" max="160" step="1" value="60">
+              <div class="range-limits"><span>20 cm</span><span>160 cm</span></div>
+            </div>
+
+            <div class="range-control">
+              <div class="range-heading">
+                <label for="focalLength">Focal length <span class="variable">(f)</span></label>
+                <output id="focalLengthValue" for="focalLength">−30 cm</output>
+              </div>
+              <input id="focalLength" type="range" min="10" max="80" step="1" value="30">
+              <div class="range-limits"><span>10 cm</span><span>80 cm</span></div>
+            </div>
+
+            <div class="sign-note">
+              <span class="sign-icon" aria-hidden="true">±</span>
+              <span>Cartesian sign convention <span class="sign-detail">· concave (−), convex (+)</span></span>
+            </div>
+
+            <button class="primary-button" id="toggleSimulation" type="button" aria-pressed="false">
+              <span class="button-icon" aria-hidden="true">⚡</span>
+              <span id="toggleLabel">START SIMULATION</span>
+            </button>
+            <button class="reset-button" id="resetSimulation" type="button">↺ <span>RESET VALUES</span></button>
+          </section>
+
+          <section class="panel telemetry-panel" aria-label="Live calculation results">
+            <div class="panel-heading telemetry-heading">
+              <div>
+                <span class="section-kicker">LIVE READINGS</span>
+                <h2>Image telemetry</h2>
+              </div>
+              <span class="live-badge"><span aria-hidden="true"></span> LIVE</span>
+            </div>
+
+            <div class="reading-grid">
+              <div class="reading-card">
+                <span class="reading-label">Object distance <span>(u)</span></span>
+                <strong id="readoutU">−60 <small>cm</small></strong>
+              </div>
+              <div class="reading-card">
+                <span class="reading-label">Focal length <span>(f)</span></span>
+                <strong id="readoutF">−30 <small>cm</small></strong>
+              </div>
+              <div class="reading-card">
+                <span class="reading-label">Image distance <span>(v)</span></span>
+                <strong id="readoutV" class="muted-reading">— <small>cm</small></strong>
+              </div>
+              <div class="reading-card">
+                <span class="reading-label">Magnification <span>(m)</span></span>
+                <strong id="readoutM" class="muted-reading">—</strong>
+              </div>
+            </div>
+
+            <div class="nature-card">
+              <span class="nature-label">NATURE &amp; SIZE OF IMAGE</span>
+              <strong id="imageNature">Turn on simulation to calculate</strong>
+              <span id="imagePosition" class="image-position">Image position: —</span>
+            </div>
+
+            <div class="equation-card">
+              <span class="equation-label">FORMULA</span>
+              <span id="equationText">Mirror: 1/f = 1/v + 1/u</span>
+            </div>
+          </section>
+        </aside>
+      </section>
+
+      <footer class="footer-note">
+        <span>CLASS 10 · LIGHT</span>
+        <span>Move a slider to change the setup <i aria-hidden="true">·</i> Start the simulation to trace rays</span>
+      </footer>
+    </main>
+  </body>
+</html>
